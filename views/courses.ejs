@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Tečajevi</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <h1>Tečajevi</h1>
+
+  <form action="/courses/add" method="POST">
+    <input type="text" name="title" placeholder="Naziv tečaja" required>
+    <input type="text" name="description" placeholder="Opis" required>
+    <input type="number" name="price" placeholder="Cijena" required>
+    <input type="text" name="duration" placeholder="Trajanje" required>
+    <input type="text" name="instructor" placeholder="Instruktor" required>
+    <button type="submit">Dodaj tečaj</button>
+  </form>
+
+  <ul>
+    <% courses.forEach(function(course) { %>
+      <li>
+        <strong><%= course.title %></strong> – <%= course.description %>  
+        | <%= course.price %> kn | <%= course.duration %> | Instruktor: <%= course.instructor %>
+
+        <form action="/courses/delete/<%= course._id %>" method="POST" style="display:inline;">
+          <button type="submit">Obriši</button>
+        </form>
+
+        <form action="/courses/update/<%= course._id %>" method="POST" style="display:inline;">
+          <input type="text" name="title" value="<%= course.title %>" required>
+          <input type="text" name="description" value="<%= course.description %>" required>
+          <input type="number" name="price" value="<%= course.price %>" required>
+          <input type="text" name="duration" value="<%= course.duration %>" required>
+          <input type="text" name="instructor" value="<%= course.instructor %>" required>
+          <button type="submit">Ažuriraj</button>
+        </form>
+      </li>
+    <% }) %>
+  </ul>
+
+  <a href="/">Natrag</a>
+</body>
+</html>

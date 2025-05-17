@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Korisnici</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <h1>Packages</h1>
+<form action="/packages/add" method="POST">
+  <input type="text" name="name" placeholder="Name" required />
+  <input type="number" name="price" placeholder="Price" required />
+  <input type="text" name="features" placeholder="Features" required />
+  <input type="text" name="duration" placeholder="Duration" required />
+  <button type="submit">Add Package</button>
+</form>
+<ul>
+  <% packages.forEach(pkg => { %>
+    <li>
+      <form action="/packages/update/<%= pkg._id %>" method="POST">
+        <input type="text" name="name" value="<%= pkg.name %>" />
+        <input type="number" name="price" value="<%= pkg.price %>" />
+        <input type="text" name="features" value="<%= pkg.features %>" />
+        <input type="text" name="duration" value="<%= pkg.duration %>" />
+        <button type="submit">Update</button>
+      </form>
+      <form action="/packages/delete/<%= pkg._id %>" method="POST">
+        <button type="submit">Delete</button>
+      </form>
+    </li>
+  <% }) %>
+</ul>
+
+  <a href="/">Natrag</a>
+</body>
+</html>

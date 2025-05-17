@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Korisnici</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <h1>Certificates</h1>
+<form action="/certificates/add" method="POST">
+  <input type="text" name="userId" placeholder="User ID" required />
+  <input type="text" name="courseId" placeholder="Course ID" required />
+  <input type="date" name="issueDate" required />
+  <button type="submit">Add Certificate</button>
+</form>
+<ul>
+  <% certificates.forEach(cert => { %>
+    <li>
+      <form action="/certificates/update/<%= cert._id %>" method="POST">
+        <input type="text" name="userId" value="<%= cert.userId %>" />
+        <input type="text" name="courseId" value="<%= cert.courseId %>" />
+        <input type="date" name="issueDate" value="<%= cert.issueDate.toISOString().substring(0, 10) %>" />
+        <button type="submit">Update</button>
+      </form>
+      <form action="/certificates/delete/<%= cert._id %>" method="POST">
+        <button type="submit">Delete</button>
+      </form>
+    </li>
+  <% }) %>
+</ul>
+
+  <a href="/">Natrag</a>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Korisnici</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <h1>Content</h1>
+<form action="/content/add" method="POST">
+  <input type="text" name="title" placeholder="Title" required />
+  <input type="text" name="type" placeholder="Type" required />
+  <input type="text" name="url" placeholder="URL" required />
+  <input type="text" name="courseId" placeholder="Course ID" required />
+  <button type="submit">Add Content</button>
+</form>
+<ul>
+  <% contents.forEach(content => { %>
+    <li>
+      <form action="/content/update/<%= content._id %>" method="POST">
+        <input type="text" name="title" value="<%= content.title %>" />
+        <input type="text" name="type" value="<%= content.type %>" />
+        <input type="text" name="url" value="<%= content.url %>" />
+        <input type="text" name="courseId" value="<%= content.courseId %>" />
+        <button type="submit">Update</button>
+      </form>
+      <form action="/content/delete/<%= content._id %>" method="POST">
+        <button type="submit">Delete</button>
+      </form>
+    </li>
+  <% }) %>
+</ul>
+
+  <a href="/">Natrag</a>
+</body>
+</html>
