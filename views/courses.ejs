@@ -2,18 +2,28 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Tečajevi</title>
+  <title>Courses</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
   <h1>Tečajevi</h1>
 
+  <!-- Forma za dodavanje tečaja -->
   <form action="/courses/add" method="POST">
     <input type="text" name="title" placeholder="Naziv tečaja" required>
     <input type="text" name="description" placeholder="Opis" required>
     <input type="number" name="price" placeholder="Cijena" required>
     <input type="text" name="duration" placeholder="Trajanje" required>
-    <input type="text" name="instructor" placeholder="Instruktor" required>
+
+    <select name="instructor" required>
+      <option value="">Odaberi instruktora</option>
+      <% instructors.forEach(function(instructor) { %>
+        <option value="<%= instructor._id %>">
+          <%= instructor.first_name %> <%= instructor.last_name %>
+        </option>
+      <% }) %>
+    </select>
+
     <button type="submit">Dodaj tečaj</button>
   </form>
 
@@ -21,18 +31,34 @@
     <% courses.forEach(function(course) { %>
       <li>
         <strong><%= course.title %></strong> – <%= course.description %>  
-        | <%= course.price %> kn | <%= course.duration %> | Instruktor: <%= course.instructor %>
+        | <%= course.price %> kn | <%= course.duration %> |
+        Instruktor: 
+        <% if (course.instructor) { %>
+          <%= course.instructor.first_name %> <%= course.instructor.last_name %>
+        <% } else { %>
+          (Nema instruktora)
+        <% } %>
 
+        <!-- Brisanje -->
         <form action="/courses/delete/<%= course._id %>" method="POST" style="display:inline;">
           <button type="submit">Obriši</button>
         </form>
 
+        <!-- Ažuriranje -->
         <form action="/courses/update/<%= course._id %>" method="POST" style="display:inline;">
           <input type="text" name="title" value="<%= course.title %>" required>
           <input type="text" name="description" value="<%= course.description %>" required>
           <input type="number" name="price" value="<%= course.price %>" required>
           <input type="text" name="duration" value="<%= course.duration %>" required>
-          <input type="text" name="instructor" value="<%= course.instructor %>" required>
+
+          <select name="instructor" required>
+            <% instructors.forEach(function(instr) { %>
+              <option value="<%= instr._id %>" <%= course.instructor && course.instructor._id.toString() === instr._id.toString() ? 'selected' : '' %>>
+                <%= instr.first_name %> <%= instr.last_name %>
+              </option>
+            <% }) %>
+          </select>
+
           <button type="submit">Ažuriraj</button>
         </form>
       </li>

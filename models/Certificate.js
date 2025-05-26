@@ -1,8 +1,14 @@
 const mongoose = require('mongoose');
 
 const CertificateSchema = new mongoose.Schema({
-  userId: String,
-  courseId: String,
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  courseId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Course'
+  },
   issueDate: Date
 });
 

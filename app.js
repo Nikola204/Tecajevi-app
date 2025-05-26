@@ -84,9 +84,14 @@ app.post('/users/update/:id', async (req, res) => {
 const Course = require('./models/Course');
 
 // GET - prikaz svih tečajeva
-app.get('/courses', async (req, res) => {
+/*app.get('/courses', async (req, res) => {
   const courses = await Course.find();
   res.render('courses', { courses });
+});*/
+app.get('/courses', async (req, res) => {
+  const courses = await Course.find().populate('instructor');
+  const instructors = await User.find({ role: 'instruktor' });
+  res.render('courses', { courses, instructors });
 });
 
 // POST - dodavanje tečaja
@@ -112,9 +117,14 @@ app.post('/courses/update/:id', async (req, res) => {
 //COONTENT RUTE
 const Content = require('./models/Content');
 
-app.get('/content', async (req, res) => {
+/*app.get('/content', async (req, res) => {
   const contents = await Content.find();
   res.render('content', { contents });
+});*/
+app.get('/content', async (req, res) => {
+  const contents = await Content.find().populate('courseId');
+  const courses = await Course.find();
+  res.render('content', { contents, courses });
 });
 
 app.post('/content/add', async (req, res) => {
@@ -138,13 +148,14 @@ app.post('/content/update/:id', async (req, res) => {
 const Package = require('./models/Package');
 
 app.get('/packages', async (req, res) => {
-  const packages = await Package.find();
-  res.render('packages', { packages });
+  const users = await User.find(); // da imaš opcije u <select>
+  const packages = await Package.find().populate('userId');
+  res.render('packages', { packages, users });
 });
 
 app.post('/packages/add', async (req, res) => {
-  const { name, price, features, duration } = req.body;
-  await Package.create({ name, price, features, duration });
+  const { name, price, features, duration, userId } = req.body;
+  await Package.create({ name, price, features, duration, userId });
   res.redirect('/packages');
 });
 
@@ -154,8 +165,8 @@ app.post('/packages/delete/:id', async (req, res) => {
 });
 
 app.post('/packages/update/:id', async (req, res) => {
-  const { name, price, features, duration } = req.body;
-  await Package.findByIdAndUpdate(req.params.id, { name, price, features, duration });
+  const { name, price, features, duration, userId } = req.body;
+  await Package.findByIdAndUpdate(req.params.id, { name, price, features, duration, userId });
   res.redirect('/packages');
 });
 
@@ -163,8 +174,14 @@ app.post('/packages/update/:id', async (req, res) => {
 const Certificate = require('./models/Certificate');
 
 app.get('/certificates', async (req, res) => {
-  const certificates = await Certificate.find();
-  res.render('certificates', { certificates });
+  const certificates = await Certificate.find()
+    .populate('userId')
+    .populate('courseId');
+
+  const users = await User.find();
+  const courses = await Course.find();
+
+  res.render('certificates', { certificates, users, courses });
 });
 
 app.post('/certificates/add', async (req, res) => {

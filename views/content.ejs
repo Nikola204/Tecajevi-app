@@ -2,34 +2,56 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Korisnici</title>
+  <title>Content</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
   <h1>Content</h1>
-<form action="/content/add" method="POST">
-  <input type="text" name="title" placeholder="Title" required />
-  <input type="text" name="type" placeholder="Type" required />
-  <input type="text" name="url" placeholder="URL" required />
-  <input type="text" name="courseId" placeholder="Course ID" required />
-  <button type="submit">Add Content</button>
-</form>
-<ul>
-  <% contents.forEach(content => { %>
-    <li>
-      <form action="/content/update/<%= content._id %>" method="POST">
-        <input type="text" name="title" value="<%= content.title %>" />
-        <input type="text" name="type" value="<%= content.type %>" />
-        <input type="text" name="url" value="<%= content.url %>" />
-        <input type="text" name="courseId" value="<%= content.courseId %>" />
-        <button type="submit">Update</button>
-      </form>
-      <form action="/content/delete/<%= content._id %>" method="POST">
-        <button type="submit">Delete</button>
-      </form>
-    </li>
-  <% }) %>
-</ul>
+
+  <form action="/content/add" method="POST">
+    <input type="text" name="title" placeholder="Title" required />
+    <input type="text" name="type" placeholder="Type" required />
+    <input type="text" name="url" placeholder="URL" required />
+
+    <select name="courseId" required>
+      <option value="">Odaberi tečaj</option>
+      <% courses.forEach(course => { %>
+        <option value="<%= course._id %>"><%= course.title %></option>
+      <% }) %>
+    </select>
+
+    <button type="submit">Add Content</button>
+  </form>
+
+  <ul>
+    <% contents.forEach(content => { %>
+      <li>
+        <strong><%= content.title %></strong> - <%= content.type %> - <%= content.url %><br>
+        Tečaj: <%= content.courseId?.title || 'Nepoznato' %>
+
+        <form action="/content/update/<%= content._id %>" method="POST" style="margin-top: 10px;">
+          <input type="text" name="title" value="<%= content.title %>" required />
+          <input type="text" name="type" value="<%= content.type %>" required />
+          <input type="text" name="url" value="<%= content.url %>" required />
+
+          <select name="courseId" required>
+            <% courses.forEach(course => { %>
+              <option value="<%= course._id %>" <%= course._id.toString() === content.courseId?._id?.toString() ? 'selected' : '' %>>
+                <%= course.title %>
+              </option>
+            <% }) %>
+          </select>
+
+          <button type="submit">Update</button>
+        </form>
+
+        <form action="/content/delete/<%= content._id %>" method="POST" style="display:inline;">
+          <button type="submit">Delete</button>
+        </form>
+      </li>
+      <hr>
+    <% }) %>
+  </ul>
 
   <a href="/">Natrag</a>
 </body>

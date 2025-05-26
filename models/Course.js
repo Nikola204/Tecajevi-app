@@ -5,7 +5,10 @@ const CourseSchema = new mongoose.Schema({
   description: String,
   price: Number,
   duration: String,
-  instructor: String
+  instructor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User' // obavezno neka se podudara s imenom modela (ne kolekcije)
+  }
 });
 
 module.exports = mongoose.model('Course', CourseSchema);

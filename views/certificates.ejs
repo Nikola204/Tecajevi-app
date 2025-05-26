@@ -2,32 +2,61 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Korisnici</title>
+  <title>Certificates</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
   <h1>Certificates</h1>
-<form action="/certificates/add" method="POST">
-  <input type="text" name="userId" placeholder="User ID" required />
-  <input type="text" name="courseId" placeholder="Course ID" required />
-  <input type="date" name="issueDate" required />
-  <button type="submit">Add Certificate</button>
-</form>
-<ul>
-  <% certificates.forEach(cert => { %>
-    <li>
-      <form action="/certificates/update/<%= cert._id %>" method="POST">
-        <input type="text" name="userId" value="<%= cert.userId %>" />
-        <input type="text" name="courseId" value="<%= cert.courseId %>" />
-        <input type="date" name="issueDate" value="<%= cert.issueDate.toISOString().substring(0, 10) %>" />
-        <button type="submit">Update</button>
-      </form>
-      <form action="/certificates/delete/<%= cert._id %>" method="POST">
-        <button type="submit">Delete</button>
-      </form>
-    </li>
-  <% }) %>
-</ul>
+
+  <form action="/certificates/add" method="POST">
+    <select name="userId" required>
+      <option value="">Odaberi korisnika</option>
+      <% users.forEach(user => { %>
+        <option value="<%= user._id %>"><%= user.ime %> <%= user.prezime %> (<%= user.email %>)</option>
+      <% }) %>
+    </select>
+
+    <select name="courseId" required>
+      <option value="">Odaberi tečaj</option>
+      <% courses.forEach(course => { %>
+        <option value="<%= course._id %>"><%= course.title %></option>
+      <% }) %>
+    </select>
+
+    <input type="date" name="issueDate" required />
+    <button type="submit">Add Certificate</button>
+  </form>
+
+  <ul>
+    <% certificates.forEach(cert => { %>
+      <li>
+        <form action="/certificates/update/<%= cert._id %>" method="POST">
+          <select name="userId" required>
+            <% users.forEach(user => { %>
+              <option value="<%= user._id %>" <%= cert.userId && cert.userId._id.toString() === user._id.toString() ? 'selected' : '' %>>
+                <%= user.ime %> <%= user.prezime %> (<%= user.email %>)
+              </option>
+            <% }) %>
+          </select>
+
+          <select name="courseId" required>
+            <% courses.forEach(course => { %>
+              <option value="<%= course._id %>" <%= cert.courseId && cert.courseId._id.toString() === course._id.toString() ? 'selected' : '' %>>
+                <%= course.title %>
+              </option>
+            <% }) %>
+          </select>
+
+          <input type="date" name="issueDate" value="<%= cert.issueDate.toISOString().substring(0, 10) %>" />
+          <button type="submit">Update</button>
+        </form>
+
+        <form action="/certificates/delete/<%= cert._id %>" method="POST">
+          <button type="submit">Delete</button>
+        </form>
+      </li>
+    <% }) %>
+  </ul>
 
   <a href="/">Natrag</a>
 </body>
